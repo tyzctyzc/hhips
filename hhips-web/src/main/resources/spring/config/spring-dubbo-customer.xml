@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://code.alibabatech.com/schema/dubbo http://code.alibabatech.com/schema/dubbo/dubbo.xsd">
+
+    <!-- 提供方应用信息，用于计算依赖关系 -->
+    <dubbo:application name="${dubbo.application.name}"/>
+
+    <!-- 使用zookeeper注册中心暴露服务地址 -->
+    <dubbo:registry address="${dubbo.registry.address}" check="false"/>
+
+    <!-- 声明需要暴露的服务接口 -->
+    <dubbo:reference interface="com.hhips.api.demo.DemoService" id="demoService" check="false"/>
+
+    <dubbo:reference interface="com.hhips.api.persistence.DelegateService" id="delegateService" check="false"/>
+    <dubbo:reference interface="com.hhips.api.jms.JmsSenderService" id="jmsSenderService" check="false"/>
+
+    <dubbo:reference interface="com.hhips.api.user.SysUserService" id="sysUserService" check="false"/>
+    <dubbo:reference interface="com.hhips.api.user.UserRoleRelService" id="userRoleRelService" check="false"/>
+
+    <dubbo:reference interface="com.hhips.api.logging.LoggingEventPropertyService" id="loggingEventPropertyService" check="false"/>
+    <dubbo:reference interface="com.hhips.api.logging.LoggingEventExceptionService" id="loggingEventExceptionService" check="false"/>
+    <dubbo:reference interface="com.hhips.api.logging.LoggingEventService" id="loggingEventService" check="false"/>
+
+    <dubbo:reference interface="com.hhips.api.role.SysRoleService" id="sysRoleService" check="false"/>
+    <dubbo:reference interface="com.hhips.api.role.RoleMenuRelService" id="roleMenuRelService" check="false"/>
+
+    <dubbo:reference interface="com.hhips.api.menu.SysMenuService" id="sysMenuService" check="false"/>
+
+    <dubbo:reference interface="com.hhips.api.product.TbProductService" id="tbProductService" check="false"/>
+
+</beans>
