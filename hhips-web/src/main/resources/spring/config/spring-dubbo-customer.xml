@@ -31,4 +31,7 @@
 
     <dubbo:reference interface="com.hhips.api.product.TbProductService" id="tbProductService" check="false"/>
 
+    <dubbo:reference interface="com.hhips.api.chapter.SysChapterService" id="sysChapterService" check="false"/>
+
+    <dubbo:reference interface="com.hhips.api.problem.ProblemService" id="problemService" check="false"/>
 </beans>

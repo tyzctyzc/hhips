@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhips.dao.mapper.chapter.SysChapterCustomMapper">
+	<resultMap id="chapterNodeMap" type="com.hhips.dao.model.chapter.ChapterNode">
+		<id column="CHAPTER_ID" jdbcType="VARCHAR" property="id" />
+		<id column="CHAPTER_PID" jdbcType="VARCHAR" property="pid" />
+		<result column="CHAPTER_NAME" jdbcType="VARCHAR" property="name" />
+		<result column="CHAPTER_URL" jdbcType="VARCHAR" property="href" />
+		<result column="CHAPTER_LEVEL" jdbcType="INTEGER" property="level" />
+		<result column="CHAPTER_PARENT" jdbcType="BIT" property="isParent" />
+		<result column="CHAPTER_OPEN" jdbcType="BIT" property="open" />
+		<result column="CHAPTER_VALID" jdbcType="BIT" property="valid" />
+	</resultMap>
+	
+	<resultMap id="chapterCheckedNodeMap" type="com.hhips.dao.model.chapter.ChapterNode">
+		<id column="CHAPTER_ID" jdbcType="VARCHAR" property="id" />
+		<id column="CHAPTER_PID" jdbcType="VARCHAR" property="pid" />
+		<result column="CHAPTER_NAME" jdbcType="VARCHAR" property="name" />
+		<result column="CHAPTER_URL" jdbcType="VARCHAR" property="href" />
+		<result column="CHAPTER_LEVEL" jdbcType="INTEGER" property="level" />
+		<result column="CHAPTER_PARENT" jdbcType="BIT" property="isParent" />
+		<result column="CHAPTER_PARENT" jdbcType="BIT" property="nocheck" />
+		<result column="CHAPTER_OPEN" jdbcType="BIT" property="open" />
+		<result column="CHAPTER_CHECKED" jdbcType="BIT" property="checked" />
+		<result column="CHAPTER_VALID" jdbcType="BIT" property="valid" />
+	</resultMap>
+	
+	<select id="getChapterNode" resultMap="chapterNodeMap" parameterType="java.lang.String">
+		SELECT CHAPTER_ID, CHAPTER_PID, CHAPTER_NAME, IF(CHAPTER_URL IS NULL, '', CHAPTER_URL) CHAPTER_URL, CHAPTER_LEVEL, IF(CHAPTER_TYPE='folder', TRUE, FALSE) CHAPTER_PARENT, IF(CHAPTER_LEVEL=0, TRUE, IF(CHAPTER_LEVEL=1, TRUE, FALSE)) CHAPTER_OPEN, CHAPTER_VALID FROM SYS_CHAPTER WHERE CHAPTER_PID=#{0} ORDER BY CHAPTER_LEVEL, CHAPTER_INDEX
+	</select>
+	
+	<select id="getChapterCheckedNode" resultMap="chapterCheckedNodeMap" parameterType="java.util.HashMap">
+		<![CDATA[
+		SELECT T.* FROM (
+			SELECT CHAPTER_ID, CHAPTER_PID, CHAPTER_NAME, IF(CHAPTER_URL IS NULL, '', CHAPTER_URL) CHAPTER_URL, CHAPTER_LEVEL, CHAPTER_INDEX, IF(CHAPTER_TYPE='folder', TRUE, FALSE) CHAPTER_PARENT, IF(CHAPTER_LEVEL=0, TRUE, IF(CHAPTER_LEVEL=1, TRUE, FALSE)) CHAPTER_OPEN, TRUE CHAPTER_CHECKED, CHAPTER_VALID FROM SYS_CHAPTER WHERE CHAPTER_ID IN (SELECT CHAPTER_ID FROM ROLE_CHAPTER_REL WHERE ROLE_ID = #{roleId})
+			UNION
+			SELECT CHAPTER_ID, CHAPTER_PID, CHAPTER_NAME, IF(CHAPTER_URL IS NULL, '', CHAPTER_URL) CHAPTER_URL, CHAPTER_LEVEL, CHAPTER_INDEX, IF(CHAPTER_TYPE='folder', TRUE, FALSE) CHAPTER_PARENT, IF(CHAPTER_LEVEL=0, TRUE, IF(CHAPTER_LEVEL=1, TRUE, FALSE)) CHAPTER_OPEN, FALSE CHAPTER_CHECKED, CHAPTER_VALID FROM SYS_CHAPTER WHERE CHAPTER_ID NOT IN (SELECT CHAPTER_ID FROM ROLE_CHAPTER_REL WHERE ROLE_ID = #{roleId})
+		) T
+		WHERE T.CHAPTER_PID = #{chapterId}
+		ORDER BY T.CHAPTER_LEVEL, T.CHAPTER_INDEX
+		]]>
+	</select>
+	
+	<select id="updateChapterType" parameterType="java.util.HashMap">
+		UPDATE SYS_CHAPTER SET CHAPTER_TYPE=#{chapterType} WHERE CHAPTER_ID=#{chapterId}
+	</select>
+	
+</mapper>

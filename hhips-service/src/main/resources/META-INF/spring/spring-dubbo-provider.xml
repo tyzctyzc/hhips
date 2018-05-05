@@ -34,6 +34,10 @@
 
     <dubbo:service interface="com.hhips.api.product.TbProductService" ref="tbProductService" timeout="10000"/>
 
+    <dubbo:service interface="com.hhips.api.chapter.SysChapterService" ref="sysChapterService" timeout="10000"/>
+
+    <dubbo:service interface="com.hhips.api.problem.ProblemService" ref="problemService" timeout="10000"/>
+
     <!-- 具体的实现bean（废弃，改用注解方式注入） -->
     <!--
     <bean id="demoService" class="com.hhips.service.demo.DemoServiceImpl"/>
