@@ -49,7 +49,7 @@
 		<div id="ztree" class="ztree"></div>
 	</div>
 	<div class="layout-right">
-		<iframe id="content_iframe" class="tab_iframe" frameborder="0"
+		<iframe id="problem_iframe" name="problem_iframe" class="problem_iframe" frameborder="0"
 		    width="940" height="650" scrolling="yes"></iframe>
 	</div>
 </body>
@@ -87,14 +87,13 @@
 	 var lastChecked;
 	// tree 双击事件
 	function zTreeOnDblClick(event, treeId, treeNode) {
-		//$("#content").load('${pageContext.request.contextPath}/common/chapter/addOrEdit');
 		if(0 == treeNode.level){
 			$('#delete-btn').hide();
 		}else{
 			$('#delete-btn').show();
 		}
 		if(lastSelected != treeNode.id || lastChecked != 'click'){
-			$("#content_iframe").attr("src", "${pageContext.request.contextPath}/common/chapter/" + treeNode.id + "/edit");
+			$("#problem_iframe").attr("src", "${pageContext.request.contextPath}/common/chapter/" + treeNode.id + "/edit");
 		}
 		lastSelected = treeNode.id;
 		lastChecked = 'click';
@@ -108,7 +107,7 @@
 			$('#delete-btn').show();
 		}
 		if(lastSelected != treeNode.id || lastChecked != 'click'){
-			$("#content_iframe").attr("src", "${pageContext.request.contextPath}/common/problem/" + treeNode.id + "/showproblem");
+			$("#problem_iframe").attr("src", "${pageContext.request.contextPath}/common/problem/" + treeNode.id + "/showproblem");
 		}
 		lastSelected = treeNode.id;
 		lastChecked = 'click';
@@ -120,7 +119,7 @@
 			$.alert("请选择父节点");
 		} else {
 			if(lastSelected != nodes[0].id || lastChecked != 'add'){
-				$("#content_iframe").attr("src", "${pageContext.request.contextPath}/common/chapter/" + nodes[0].id + "/add");
+				$("#problem_iframe").attr("src", "${pageContext.request.contextPath}/common/chapter/" + nodes[0].id + "/add");
 			}
 			lastSelected = nodes[0].id;
 			lastChecked = 'add';

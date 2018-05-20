@@ -72,6 +72,23 @@ public abstract class BaseServiceImpl<Mapper, Record, Example> implements BaseSe
     }
 
     @Override
+    public int deleteByPrimaryKey(Integer id) {
+        int res = 0;
+        try {
+            Method deleteByPrimaryKey = mapper.getClass().getDeclaredMethod("deleteByPrimaryKey", id.getClass());
+            Object result = deleteByPrimaryKey.invoke(mapper, id);
+            return Integer.parseInt(String.valueOf(result));
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    @Override
     public int insert(Record record) {
         int res = 0;
         try {
@@ -251,6 +268,23 @@ public abstract class BaseServiceImpl<Mapper, Record, Example> implements BaseSe
 
     @Override
     public Record selectByPrimaryKey(String id) {
+        Record res = null;
+        try {
+            Method selectByPrimaryKey = mapper.getClass().getDeclaredMethod("selectByPrimaryKey", id.getClass());
+            Object result = selectByPrimaryKey.invoke(mapper, id);
+            res = (Record) result;
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    @Override
+    public Record selectByPrimaryKey(Integer id) {
         Record res = null;
         try {
             Method selectByPrimaryKey = mapper.getClass().getDeclaredMethod("selectByPrimaryKey", id.getClass());

@@ -34,4 +34,8 @@
     <dubbo:reference interface="com.hhips.api.chapter.SysChapterService" id="sysChapterService" check="false"/>
 
     <dubbo:reference interface="com.hhips.api.problem.ProblemService" id="problemService" check="false"/>
+    <dubbo:reference interface="com.hhips.api.problem.ModuleService" id="moduleService" check="false"/>
+    <dubbo:reference interface="com.hhips.api.problem.SourceChapterService" id="sourceChapterService" check="false"/>
+    <dubbo:reference interface="com.hhips.api.problem.SourceService" id="sourceService" check="false"/>
+    <dubbo:reference interface="com.hhips.api.problem.WorkService" id="workService" check="false"/>
 </beans>
