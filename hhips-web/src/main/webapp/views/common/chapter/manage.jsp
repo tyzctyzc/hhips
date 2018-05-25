@@ -203,5 +203,10 @@
 		lastSelected='';
 		lastChecked='';
 	}
+	// clear last selected
+	function clearLastSelected() {
+		lastSelected='';
+		lastChecked='';
+	}
 </script>
 </html>

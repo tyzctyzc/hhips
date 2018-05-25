@@ -93,4 +93,6 @@ public interface WorkMapper {
      * @mbg.generated Mon Apr 30 14:26:05 CST 2018
      */
     int updateByPrimaryKey(Work record);
+
+    List<Work> selectByExampleWithProblemID(Integer idproblem);
 }

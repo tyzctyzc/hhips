@@ -18,6 +18,7 @@
 		<a class="waves-effect btn btn-success btn-sm" href="javascript:activeProblem();" ><i class="zmdi zmdi-calendar-check"></i> 激活问题</a>
 		<a class="waves-effect btn btn-default btn-sm" href="javascript:deactiveProblem();" ><i class="zmdi zmdi-calendar-remove"></i> 不激活问题</a>
 		<a class="waves-effect btn btn-primary btn-sm" href="javascript:detailProblem();" ><i class="zmdi zmdi-triangle-down"></i> 问题详细</a>
+		<a class="waves-effect btn btn-warning btn-sm" href="javascript:makeProblem();" ><i class="zmdi zmdi-edit"></i> 做题</a>
 	</div>
 	<table id="table"></table>
 </div>
@@ -27,8 +28,6 @@
 <script type="text/javascript">
 
 var $table = $('#table');
-var treeObj;
-var userId;
 $(function() {
 	
 	$table.bsTable({
@@ -62,9 +61,9 @@ $(function() {
 	
 });
 
-var postRes;
 // 添加
 function addProblem() {
+    parent.clearLastSelected();
     var list = $("#table").bootstrapTable('getData')[0];
     if(list==null){
         parent.document.getElementById('problem_iframe').src = "${pageContext.request.contextPath}/common/problem/0/add";
@@ -118,6 +117,7 @@ function deleteProblem() {
                         console.log("url", '${pageContext.request.contextPath}/common/problem/save');
                         console.log("problem", problem);
                         $.post('${pageContext.request.contextPath}/common/problem/delete', problem, function(data) {
+                            parent.clearLastSelected();
                             $.alert(data.msg);
                         });
 					}
@@ -165,17 +165,9 @@ function activeProblem() {
 					action: function () {
                         var problem = {};
                         problem.idproblem = rows[0].idproblem;
-                        problem.problemlevel = rows[0].problemlevel;
-                        problem.problemdetail = rows[0].problemdetail;
-                        problem.problemchapterid = rows[0].problemchapterid;
-                        problem.problemindex = rows[0].problemindex;
-                        problem.problemmodule = rows[0].problemmodule;
                         problem.problemcisactive = 1;
-                        problem.problemanswerstring = rows[0].problemanswerstring;
-                        problem.problemanswerdetail = rows[0].problemanswerdetail;
-                        console.log("url", '${pageContext.request.contextPath}/common/problem/active');
-                        console.log("problem", problem);
                         $.post('${pageContext.request.contextPath}/common/problem/active', problem, function(data) {
+                            parent.clearLastSelected();
                             $.alert(data.msg);
                         });
 					}
@@ -223,17 +215,9 @@ function deactiveProblem() {
 					action: function () {
                         var problem = {};
                         problem.idproblem = rows[0].idproblem;
-                        problem.problemlevel = rows[0].problemlevel;
-                        problem.problemdetail = rows[0].problemdetail;
-                        problem.problemchapterid = rows[0].problemchapterid;
-                        problem.problemindex = rows[0].problemindex;
-                        problem.problemmodule = rows[0].problemmodule;
                         problem.problemcisactive = 0;
-                        problem.problemanswerstring = rows[0].problemanswerstring;
-                        problem.problemanswerdetail = rows[0].problemanswerdetail;
-                        console.log("url", '${pageContext.request.contextPath}/common/problem/deactive');
-                        console.log("problem", problem);
                         $.post('${pageContext.request.contextPath}/common/problem/deactive', problem, function(data) {
+                            parent.clearLastSelected();
                             $.alert(data.msg);
                         });
 					}
@@ -244,6 +228,28 @@ function deactiveProblem() {
 				}
 			}
 		});
+	}
+}
+
+// 问题详细
+function detailProblem() {
+	var rows = $table.bootstrapTable('getSelections');
+	if (rows.length == 0) {
+		$.confirm({
+			title: false,
+			content: '请至少选择一条记录！',
+			autoClose: 'cancel|3000',
+			backgroundDismiss: true,
+			buttons: {
+				cancel: {
+					text: '取消',
+					btnClass: 'waves-effect waves-button'
+				}
+			}
+		});
+	} else {
+        parent.clearLastSelected();
+        parent.document.getElementById('problem_iframe').src = "${pageContext.request.contextPath}/common/problem/" + rows[0].idproblem + "/detail";
 	}
 }
 </script>

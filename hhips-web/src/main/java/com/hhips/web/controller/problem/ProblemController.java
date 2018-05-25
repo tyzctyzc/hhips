@@ -3,7 +3,6 @@ package com.hhips.web.controller.problem;
 import com.hhips.api.chapter.SysChapterService;
 import com.hhips.api.persistence.DelegateService;
 import com.hhips.api.problem.*;
-import com.hhips.api.problem.SourceChapterService;
 import com.hhips.common.model.MsgModel;
 import com.hhips.common.model.PageModel;
 import com.hhips.common.util.FileHelper;
@@ -47,12 +46,17 @@ public class ProblemController extends BaseController {
     private SysChapterService sysChapterService;
 
     @Autowired
+    private WorkService workService;
+
+    @Autowired
     private DelegateService delegateService;
 
     @Autowired
     ServletContext servletContext;
 
     private Integer chapterid;
+
+    private Integer problemid;
 
     @RequestMapping("/manage")
     public String manage() {
@@ -65,44 +69,6 @@ public class ProblemController extends BaseController {
         ProblemExample example = new ProblemExample();
         PageModel<Problem> pageModel = problemService.selectByExampleWithChapterIDForOffsetPage(/*example, */chapterid, offset, limit);
         return pageModel;
-    }
-
-    /**
-     * 用户对应角色保存方法<br>
-     *
-     * @param userId  用户Id
-     * @param roleStr 角色列表字符串
-     * @return MsgModel 消息模型
-     */
-    @RequestMapping(value = "/roleSave", method = RequestMethod.POST)
-    @ResponseBody
-    public MsgModel roleSave(String userId, String roleStr) {
-        List<String> roleIds = Arrays.asList(roleStr.split(","));
-
-        // 先清除历史数据
-/*        UserRoleRelExample example = new UserRoleRelExample();
-        example.createCriteria().andUserIdEqualTo(userId);
-        userRoleRelService.deleteByExample(example);
-
-        // 添加
-        for (String roleId : roleIds) {
-            if (!this.isNull(roleId.trim())) {
-                UserRoleRel userRoleRel = new UserRoleRel();
-                userRoleRel.setRelId(this.getUUID());
-                userRoleRel.setUserId(userId);
-                userRoleRel.setRoleId(roleId);
-                userRoleRelService.insertSelective(userRoleRel);
-            }
-        }*/
-        return this.resultMsg("保存成功");
-    }
-
-    @RequestMapping("/upload")
-    @ResponseBody
-    public String upload(HttpServletRequest request) {
-        List<String> fileNames = this.fileUpLoad(request);
-        System.out.println(fileNames);
-        return "success";
     }
 
     /**
@@ -273,5 +239,30 @@ public class ProblemController extends BaseController {
         } else {
             return this.resultMsg("不激活成功！");
         }
+    }
+
+    /**
+     * Detail problem<br>
+     *
+     * @param problemId problem ID
+     * @param model  problem model data
+     * @return String the page to add new problem
+     */
+    @RequestMapping("/{problemId}/detail")
+    public String detailProblem(@PathVariable String problemId, Model model) {
+        Problem problem = problemService.selectByPrimaryKey(Integer.parseInt(problemId));
+        problemid = problem.getIdproblem();
+        SourceChapter sourcechapter = sourceChapterService.selectByPrimaryKey(problem.getProblemchapterid());
+        model.addAttribute("chaptername", sourcechapter.getSourcechaptername());
+        model.addAttribute("chapterid", problem.getProblemchapterid());
+        model.addAttribute("problem", problem);
+        return "common/problem/detail";
+    }
+
+    @RequestMapping(value = "/worklist", method = RequestMethod.POST)
+    @ResponseBody
+    public PageModel<Work> worklist(int offset, int limit, String search, String sort, String order) {
+        PageModel<Work> pageModel = workService.selectByExampleWithProblemIDForOffsetPage(problemid, offset, limit);
+        return pageModel;
     }
 }
