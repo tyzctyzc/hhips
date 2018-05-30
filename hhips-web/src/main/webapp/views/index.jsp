@@ -189,38 +189,6 @@
 		<!-- /个人资料区 -->
 		<!-- 菜单区 -->
 		<ul id="main-menu" class="main-menu">
-			<!-- 
-			<li>
-			<a class="waves-effect" href="javascript:Tab.addTab('首页', 'home');"><i class="zmdi zmdi-home"></i> 首页</a>
-			</li>
-			<li class="sub-menu system_menus">
-			<a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-accounts"></i> 角色用户管理</a>
-			<ul>
-				<li><a class="waves-effect" href="javascript:Tab.addTab('角色管理', '/manage/role/index');">角色管理</a></li>
-				<li><a class="waves-effect" href="javascript:Tab.addTab('用户管理', '${pageContext.request.contextPath}/common/user/init');">用户管理</a></li>
-				<li><a class="waves-effect" href="javascript:Tab.addTab('产品管理', '${pageContext.request.contextPath}/demo/product/init');">产品管理</a></li>
-			</ul>
-			</li>
-			<li class="sub-menu system_menus">
-			<a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-lock-outline"></i> 权限资源管理</a>
-			<ul>
-				<li><a class="waves-effect" href="javascript:Tab.addTab('权限管理', '/manage/resources/index');">权限管理</a></li>
-				<li><a class="waves-effect" href="javascript:Tab.addTab('菜单管理', '${pageContext.request.contextPath}/common/menu/init');">菜单管理</a></li>
-			</ul>
-			</li>
-			<li class="sub-menu system_menus">
-			<a class="waves-effect" href="javascript:;"><i class="zmdi zmdi-more"></i> 其他数据管理</a>
-			<ul>
-				<li><a class="waves-effect" href="javascript:Tab.addTab('日志记录', '${pageContext.request.contextPath}/common/logging/init');">日志记录</a></li>
-				<li><a class="waves-effect" href="javascript:Tab.addTab('模板查看', '${pageContext.request.contextPath}/template');">模板查看</a></li>
-			</ul>
-			</li>
-			<li>
-			<div class="upms-version">
-				&copy; HHIPS FRAME V1.0
-			</div>
-			</li>
-			 -->
 		</ul>
 		<!-- /菜单区 -->
 	</aside>

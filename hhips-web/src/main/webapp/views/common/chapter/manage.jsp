@@ -68,11 +68,77 @@
 		callback : {
 			//beforeClick: zTreeBeforeClick,
 			onClick : zTreeOnClick,
-			onDblClick: zTreeOnDblClick
+			onDblClick: zTreeOnDblClick,
+            beforeAsync: beforeAsync,
+            onAsyncSuccess: onAsyncSuccess
 		}
 	};
+
+    function filter(treeId, parentNode, childNodes) {
+        if (!childNodes) return null;
+        for (var i=0, l=childNodes.length; i<l; i++) {
+            childNodes[i].name = childNodes[i].name.replace(/\.n/g, '.');
+        }
+        return childNodes;
+    }
+
+    function beforeAsync() {
+        curAsyncCount++;
+    }
+
+    function onAsyncSuccess(event, treeId, treeNode, msg) {
+        curAsyncCount--;
+        if (curStatus == "expand") {
+            expandNodes(treeNode.children);
+        } else if (curStatus == "async") {
+            asyncNodes(treeNode.children);
+        }
+
+        if (curAsyncCount <= 0) {
+            curStatus = "";
+        }
+    }
+    var curStatus = "init", curAsyncCount = 0, goAsync = false;
+    function expandAll() {
+        if (!check()) {
+            return;
+        }
+        var zTree = $.fn.zTree.getZTreeObj("ztree");
+        expandNodes(zTree.getNodes());
+        if (!goAsync) {
+            curStatus = "";
+        }
+    }
+    function expandNodes(nodes) {
+        if (!nodes) return;
+        curStatus = "expand";
+        var zTree = $.fn.zTree.getZTreeObj("ztree");
+        for (var i=0, l=nodes.length; i<l; i++) {
+            zTree.expandNode(nodes[i], true, false, false);//展开节点就会调用后台查询子节点
+            if (nodes[i].isParent && nodes[i].zAsync) {
+                expandNodes(nodes[i].children);//递归
+            } else {
+                goAsync = true;
+            }
+        }
+    }
+
+    function check() {
+        if (curAsyncCount > 0) {
+            return false;
+        }
+        return true;
+    }
+
+    $(document).ready(function(){
+        $.fn.zTree.init($("#ztree"), setting);
+        setTimeout(function(){
+            expandAll("ztree");
+        },1000);//延迟加载
+    });
+
 	// 初始化 tree 数据
-	treeObj = $.fn.zTree.init($('#ztree'), setting);
+//	treeObj = $.fn.zTree.init($('#ztree'), setting);
 	// 设置样式
 	function setFontCss(treeId, treeNode) {
 		return treeNode.valid == false ? {color:"red"} : {};

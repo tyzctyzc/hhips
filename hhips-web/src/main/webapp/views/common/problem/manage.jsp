@@ -34,6 +34,7 @@ $(function() {
 		url: '${pageContext.request.contextPath}/common/problem/problemlist',
 		idField: 'idproblem',// 指定主键列
 		singleSelect: true,
+		clickToSelect: false,
 		search: true,
 		columns: [
 			{field: 'state', checkbox: true},
@@ -59,6 +60,29 @@ $(function() {
 		]
 	});
 	
+//    $('#table').on('click-cell.bs.table', function (field, value, row, $el) {
+//        console.log('field', field);
+//        console.log('value', value);
+//        console.log('row', row);
+//        console.log('$el', $el);
+//        if (value !="problemdetail"){
+//            alert($el.idproblem+"-"+$el.problemcisactive+"-"+$el.problemdetail);
+//        }
+//    });
+
+    $('#table').on('click-row.bs.table', function (e, row, $element) {
+        if(row != null) {
+        }
+        parent.clearLastSelected();
+        parent.document.getElementById('problem_iframe').src = "${pageContext.request.contextPath}/common/problem/" + row.idproblem + "/detail";
+    })
+    .on('dbl-click-row.bs.table', function (e, row, $element) {
+        if(row != null) {
+        }
+        parent.clearLastSelected();
+        parent.document.getElementById('problem_iframe').src = "${pageContext.request.contextPath}/common/problem/" + row.idproblem + "/detail";
+    });
+
 });
 
 // 添加
