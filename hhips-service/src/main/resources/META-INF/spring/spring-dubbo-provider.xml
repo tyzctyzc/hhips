@@ -46,6 +46,10 @@
 
     <dubbo:service interface="com.hhips.api.problem.WorkService" ref="workService" timeout="10000"/>
 
+    <dubbo:service interface="com.hhips.api.problem.PaperService" ref="paperService" timeout="10000"/>
+
+    <dubbo:service interface="com.hhips.api.problem.PaperProblemService" ref="paperProblemService" timeout="10000"/>
+
     <!-- 具体的实现bean（废弃，改用注解方式注入） -->
     <!--
     <bean id="demoService" class="com.hhips.service.demo.DemoServiceImpl"/>

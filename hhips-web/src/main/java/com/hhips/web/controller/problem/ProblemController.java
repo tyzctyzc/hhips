@@ -52,11 +52,19 @@ public class ProblemController extends BaseController {
     private DelegateService delegateService;
 
     @Autowired
-    ServletContext servletContext;
+    private ServletContext servletContext;
+
+    @Autowired
+    private PaperService paperService;
+
+    @Autowired
+    private PaperProblemService paperProblemService;
 
     private Integer chapterid;
 
     private Integer problemid;
+
+    private Integer paperid;
 
     @RequestMapping("/manage")
     public String manage() {
@@ -264,5 +272,87 @@ public class ProblemController extends BaseController {
     public PageModel<Work> worklist(int offset, int limit, String search, String sort, String order) {
         PageModel<Work> pageModel = workService.selectByExampleWithProblemIDForOffsetPage(problemid, offset, limit);
         return pageModel;
+    }
+
+    /**
+     * Show paper problems <br>
+     *
+     * @param paperId 章节主键
+     * @param model  编辑章节对应的模型数据
+     * @return String 章节编辑界面
+     */
+    @RequestMapping("/{paperId}/showpaper")
+    public String showpaper(@PathVariable String paperId, Model model) {
+        PaperExample example = new PaperExample();
+        example.setOrderByClause("idpaper desc");
+        List<Paper> listPaper = paperService.selectByExample(example);
+        if(this.isNull(paperId) || paperId.equals("null")) {
+            if(listPaper != null) {
+                paperid = listPaper.get(0).getIdpaper();
+            } else {
+                paperid = 0;
+            }
+        } else {
+            paperid = Integer.parseInt(paperId);
+        }
+        Paper paper = paperService.selectByPrimaryKey(paperid);
+        model.addAttribute("currpaper", paper);
+        model.addAttribute("papers", listPaper);
+        return "common/problem/paper";
+    }
+
+    /**
+     * get paper problems list<br>
+     *
+     * @param offset 章节主键
+     * @param limit  编辑章节对应的模型数据
+     * @param search 章节主键
+     * @param sort  编辑章节对应的模型数据
+     * @param order  编辑章节对应的模型数据
+     * @return String 章节编辑界面
+     */
+    @RequestMapping(value = "/paperproblemlist", method = RequestMethod.POST)
+    @ResponseBody
+    public PageModel<Paperproblem> PaperProblemList(int offset, int limit, String search, String sort, String order) {
+        PageModel<Paperproblem> pageModel = paperProblemService.selectByPaperID(paperid, offset, limit);
+        return pageModel;
+    }
+
+    /**
+     * update paper active/deactive status<br>
+     *
+     * @param  paper 问题模型数据
+     * @return MsgModel 消息模型
+     */
+    @RequestMapping(value = "/updatepaperstatus", method = RequestMethod.POST)
+    @ResponseBody
+    @Transactional
+    public MsgModel UpdatePaperStatus(Paper paper) {
+        int count = paperService.updateByPrimaryKeySelective(paper);
+
+        if(count < 1) {
+            return this.resultMsg("激活状态更新失败！");
+        } else {
+            return this.resultMsg("激活状态更新成功！");
+        }
+    }
+
+    /**
+     * 删除页问题<br>
+     *
+     * @param  paperproblem 问题模型数据
+     * @return MsgModel 消息模型
+     */
+    @RequestMapping(value = "/deletepaperproblem", method = RequestMethod.POST)
+    @ResponseBody
+    @Transactional
+    public MsgModel DeletePaperProblem(Paperproblem paperproblem) {
+        int count = paperProblemService.deleteByPrimaryKey(paperproblem.getPaperproblemid());
+
+        if(count < 1) {
+            return this.resultMsg("删除失败！");
+        } else {
+            return this.resultMsg("删除成功！");
+        }
     }
 }
